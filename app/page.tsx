@@ -1,65 +1,140 @@
-import Image from "next/image";
+"use client";
+
+import { useQuery } from "convex/react";
+import { api } from "../convex/_generated/api";
+import Link from "next/link";
+import { useState, useMemo } from "react";
+
+type SortKey = "name" | "headcount" | "budget2026";
+type SortDir = "asc" | "desc";
 
 export default function Home() {
+  const orgs = useQuery(api.orgs.listOrgs);
+  const [filter, setFilter] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("name");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const sortIndicator = (key: SortKey) => {
+    if (sortKey !== key) return "";
+    return sortDir === "asc" ? " \u2191" : " \u2193";
+  };
+
+  const filtered = useMemo(() => {
+    if (!orgs) return [];
+    const q = filter.toLowerCase();
+    const list = q
+      ? orgs.filter(
+          (o) =>
+            o.name.toLowerCase().includes(q) ||
+            o.subtitle.toLowerCase().includes(q) ||
+            o.tags.some((t) => t.toLowerCase().includes(q))
+        )
+      : [...orgs];
+
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortKey === "name") {
+        cmp = a.name.localeCompare(b.name);
+      } else if (sortKey === "headcount") {
+        cmp = a.headcount - b.headcount;
+      } else if (sortKey === "budget2026") {
+        const parse = (s: string) => parseFloat(s.replace(/[^0-9.]/g, ""));
+        cmp = parse(a.budget2026) - parse(b.budget2026);
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+    return list;
+  }, [orgs, filter, sortKey, sortDir]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex-1 px-6 py-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Filter orgs..."
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="w-full max-w-sm px-3 py-2 border border-zinc-300 text-sm focus:outline-none focus:border-zinc-500"
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        {orgs === undefined ? (
+          <p className="text-sm text-zinc-500">Loading...</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-zinc-200 text-left">
+                <th
+                  className="py-2 pr-4 font-medium cursor-pointer select-none"
+                  onClick={() => handleSort("name")}
+                >
+                  Name{sortIndicator("name")}
+                </th>
+                <th className="py-2 pr-4 font-medium">Subtitle</th>
+                <th
+                  className="py-2 pr-4 font-medium font-mono cursor-pointer select-none text-right"
+                  onClick={() => handleSort("headcount")}
+                >
+                  Headcount{sortIndicator("headcount")}
+                </th>
+                <th
+                  className="py-2 pr-4 font-medium font-mono cursor-pointer select-none text-right"
+                  onClick={() => handleSort("budget2026")}
+                >
+                  2026 Budget{sortIndicator("budget2026")}
+                </th>
+                <th className="py-2 font-medium">Tags</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((org) => (
+                <tr
+                  key={org._id}
+                  className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors"
+                >
+                  <td className="py-2.5 pr-4">
+                    <Link
+                      href={`/org/${org.slug}`}
+                      className="font-medium hover:underline"
+                    >
+                      {org.name}
+                    </Link>
+                  </td>
+                  <td className="py-2.5 pr-4 text-zinc-600">{org.subtitle}</td>
+                  <td className="py-2.5 pr-4 font-mono text-right">
+                    {org.headcount}
+                  </td>
+                  <td className="py-2.5 pr-4 font-mono text-right">
+                    {org.budget2026}
+                  </td>
+                  <td className="py-2.5">
+                    <div className="flex gap-1.5 flex-wrap">
+                      {org.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-1.5 py-0.5 text-xs bg-zinc-100 text-zinc-600"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </main>
   );
 }
