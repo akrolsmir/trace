@@ -1,18 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FDF7F9;
+  --foreground: #1a1218;
+  --warm-50: #FEF9FB;
+  --warm-100: #F8EDF2;
+  --warm-200: #EDDBЕ3;
+  --warm-300: #DFC5D1;
+  --warm-400: #B08A9A;
+  --warm-500: #8C6878;
+  --warm-600: #6B4D5B;
+  --warm-700: #4A3340;
+  --warm-800: #2F1F28;
+  --warm-900: #1a1218;
+  --accent: #A4325A;
+  --accent-light: #C03D6B;
+  --accent-muted: #F5E0E9;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
+  --color-warm-50: var(--warm-50);
+  --color-warm-100: var(--warm-100);
+  --color-warm-200: var(--warm-200);
+  --color-warm-300: var(--warm-300);
+  --color-warm-400: var(--warm-400);
+  --color-warm-500: var(--warm-500);
+  --color-warm-600: var(--warm-600);
+  --color-warm-700: var(--warm-700);
+  --color-warm-800: var(--warm-800);
+  --color-warm-900: var(--warm-900);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-muted: var(--accent-muted);
+  --font-sans: var(--font-jost);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-logo: var(--font-vollkorn-sc);
+  --font-body: var(--font-jost);
 }

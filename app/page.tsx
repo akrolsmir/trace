@@ -56,73 +56,95 @@ export default function Home() {
   }, [orgs, filter, sortKey, sortDir]);
 
   return (
-    <main className="flex-1 px-6 py-8">
+    <main className="flex-1 px-6 py-12">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
+        {/* Hero section */}
+        <div className="mb-12">
+          <h1 className="font-logo text-4xl text-warm-900 mb-3">
+            Organizations
+          </h1>
+          <p className="text-warm-500 text-lg font-light max-w-2xl leading-relaxed">
+            A directory of organizations working to ensure artificial intelligence benefits humanity.
+          </p>
+        </div>
+
+        {/* Filter */}
+        <div className="mb-8">
           <input
             type="text"
-            placeholder="Filter orgs..."
+            placeholder="Search organizations..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-full max-w-sm px-3 py-2 border border-zinc-300 text-sm focus:outline-none focus:border-zinc-500"
+            className="w-full max-w-md px-4 py-2.5 bg-warm-50 border border-warm-200 text-sm text-warm-800 placeholder:text-warm-400 focus:outline-none focus:border-warm-400 focus:bg-white transition-all rounded-sm"
           />
         </div>
 
         {orgs === undefined ? (
-          <p className="text-sm text-zinc-500">Loading...</p>
+          <p className="text-sm text-warm-400">Loading...</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-zinc-200 text-left">
+              <tr className="border-b-2 border-warm-200 text-left">
+                <th className="py-3 pr-4 w-10"></th>
                 <th
-                  className="py-2 pr-4 font-medium cursor-pointer select-none"
+                  className="py-3 pr-4 font-medium text-warm-500 uppercase text-xs tracking-wider cursor-pointer select-none hover:text-warm-700 transition-colors"
                   onClick={() => handleSort("name")}
                 >
-                  Name{sortIndicator("name")}
+                  Organization{sortIndicator("name")}
                 </th>
-                <th className="py-2 pr-4 font-medium">Subtitle</th>
+                <th className="py-3 pr-4 font-medium text-warm-500 uppercase text-xs tracking-wider">
+                  Focus
+                </th>
                 <th
-                  className="py-2 pr-4 font-medium font-mono cursor-pointer select-none text-right"
+                  className="py-3 pr-4 font-medium font-mono text-warm-500 uppercase text-xs tracking-wider cursor-pointer select-none text-right hover:text-warm-700 transition-colors"
                   onClick={() => handleSort("headcount")}
                 >
-                  Headcount{sortIndicator("headcount")}
+                  People{sortIndicator("headcount")}
                 </th>
                 <th
-                  className="py-2 pr-4 font-medium font-mono cursor-pointer select-none text-right"
+                  className="py-3 pr-4 font-medium font-mono text-warm-500 uppercase text-xs tracking-wider cursor-pointer select-none text-right hover:text-warm-700 transition-colors"
                   onClick={() => handleSort("budget2026")}
                 >
                   2026 Budget{sortIndicator("budget2026")}
                 </th>
-                <th className="py-2 font-medium">Tags</th>
+                <th className="py-3 font-medium text-warm-500 uppercase text-xs tracking-wider">
+                  Tags
+                </th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((org) => (
                 <tr
                   key={org._id}
-                  className="border-b border-zinc-100 hover:bg-zinc-50 transition-colors"
+                  className="border-b border-warm-100 hover:bg-warm-50 transition-colors group"
                 >
-                  <td className="py-2.5 pr-4">
+                  {/* Logo placeholder */}
+                  <td className="py-3.5 pr-3">
+                    <div className="w-9 h-9 rounded-md flex items-center justify-center bg-warm-100 border border-warm-200 text-warm-400 text-[0.55rem] font-medium uppercase tracking-wider">
+                      {org.name.slice(0, 2)}
+                    </div>
+                  </td>
+                  <td className="py-3.5 pr-4">
                     <Link
                       href={`/org/${org.slug}`}
-                      className="font-medium hover:underline"
+                      className="font-medium text-warm-900 group-hover:text-accent transition-colors"
                     >
                       {org.name}
                     </Link>
                   </td>
-                  <td className="py-2.5 pr-4 text-zinc-600">{org.subtitle}</td>
-                  <td className="py-2.5 pr-4 font-mono text-right">
+                  <td className="py-3.5 pr-4 text-warm-500">{org.subtitle}</td>
+                  <td className="py-3.5 pr-4 font-mono text-warm-600 text-right tabular-nums">
                     {org.headcount}
                   </td>
-                  <td className="py-2.5 pr-4 font-mono text-right">
+                  <td className="py-3.5 pr-4 font-mono text-warm-600 text-right tabular-nums">
                     {org.budget2026}
                   </td>
-                  <td className="py-2.5">
+                  <td className="py-3.5">
                     <div className="flex gap-1.5 flex-wrap">
                       {org.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-1.5 py-0.5 text-xs bg-zinc-100 text-zinc-600"
+                          className="px-2 py-0.5 text-xs bg-warm-100 text-warm-500 rounded-sm"
                         >
                           {tag}
                         </span>

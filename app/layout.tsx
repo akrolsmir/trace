@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Vollkorn_SC, Jost, JetBrains_Mono } from "next/font/google";
 import ConvexClientProvider from "./convex-client-provider";
 import Link from "next/link";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const vollkornSC = Vollkorn_SC({
+  variable: "--font-vollkorn-sc",
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "900"],
+});
+
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -27,17 +33,19 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${vollkornSC.variable} ${jost.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <header className="border-b border-zinc-200 px-6 py-4">
-          <div className="max-w-6xl mx-auto flex items-baseline gap-3">
-            <Link href="/" className="text-lg font-semibold tracking-tight">
-              Trace
-            </Link>
-            <span className="text-sm text-zinc-500">
-              AI Safety Giving Database
-            </span>
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        <header className="border-b border-warm-200 px-6 py-5">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-baseline gap-4">
+              <Link href="/" className="font-logo text-2xl tracking-wide text-warm-900 hover:text-warm-700 transition-colors">
+                Trace
+              </Link>
+              <span className="text-sm text-warm-400 font-body tracking-wide uppercase">
+                AI Safety Giving Database
+              </span>
+            </div>
           </div>
         </header>
         <ConvexClientProvider>{children}</ConvexClientProvider>
