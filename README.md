@@ -1,9 +1,14 @@
 # Next features
 Standard social features:
+- auth...
 - Comments
-- Claim a profile
+- Claim a profile; verified people/orgs
   - Idea for bootstrapping: scrape internet for public emails associated with a profile; contact a few?
 - Activity feed
+- Lists of recs?
+  - Make it easy to share recs?
+  - create a synthetic fund? fantasy fund?
+  - make it easy to launch a new fund??
 
 LLM-augmented features:
 - When searching for a missing entity, have an option to generate it (do an internet search, find relevant data)
@@ -11,6 +16,9 @@ LLM-augmented features:
 - Recommend projects to consider; matching algorithm
   - "Chat with LLM" to discover projects/people, eg "find me seed-stage projects for AI welfare"
 - Create visualizations quickly (?) via Claude Artifact-like react hooks
+- Compare orgs?
+- Want a claude code-like ability to rewrite/recategorize/augment the data itself
+  - eg to refactor out CG into different sub-funds
 
 Integrating well with LLMs:
 - API
@@ -20,6 +28,8 @@ Integrating well with LLMs:
 
 Misc:
 - More linking to relevant links (webpage, linkedin, ea forum)
+- Load in Manifund; add other funds
+  - How to segment specific CG fund vs others?
 
 
 ## Questions
@@ -29,6 +39,7 @@ Misc:
 
 
 - Do we expect data consumption via standard web browsing? LLM agents? some mix?
+
 - Is our killer feature...
   - a good trustworthy comprehensive db?
   - a slick UI to inform users?
