@@ -27,7 +27,9 @@ Integrating well with LLMs:
 - "chat with in Claude/ChatGPT"?
 
 Misc:
+- Add about page
 - More linking to relevant links (webpage, linkedin, ea forum)
+- Clear unnecessary info eg on grants
 - Load in Manifund; add other funds
   - How to segment specific CG fund vs others?
 
@@ -45,3 +47,7 @@ Misc:
   - a slick UI to inform users?
   - high-quality assessments, evaluations?
   - collaboration, buy-in from other funds & grantmakers?
+
+
+- Q: better to have stub/incorrect data, or only comprehensive ones?
+  - could have some basic filter for stubs
