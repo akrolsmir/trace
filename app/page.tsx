@@ -92,9 +92,6 @@ export default function Home() {
                 >
                   Organization{sortIndicator("name")}
                 </th>
-                <th className="py-3 pr-4 font-medium text-warm-500 uppercase text-xs tracking-wider hidden md:table-cell">
-                  Description
-                </th>
                 <th
                   className="py-3 pr-4 font-medium font-mono text-warm-500 uppercase text-xs tracking-wider cursor-pointer select-none text-right hover:text-warm-700 transition-colors"
                   onClick={() => handleSort("teamSize")}
@@ -118,11 +115,20 @@ export default function Home() {
                   key={org._id}
                   className="border-b border-warm-100 hover:bg-warm-50 transition-colors group"
                 >
-                  {/* Logo placeholder */}
                   <td className="py-3.5 pr-3">
-                    <div className="w-9 h-9 rounded-md flex items-center justify-center bg-warm-100 border border-warm-200 text-warm-400 text-[0.55rem] font-medium uppercase tracking-wider">
-                      {org.name.slice(0, 2)}
-                    </div>
+                    {org.logoUrl ? (
+                      <div className="w-9 h-9 rounded-md border border-warm-200 text-warm-400 bg-warm-100 overflow-hidden flex items-center justify-center">
+                        <img
+                          src={org.logoUrl}
+                          alt=""
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-9 h-9 rounded-md flex items-center justify-center bg-warm-100 border border-warm-200 text-warm-400 text-[0.55rem] font-medium uppercase tracking-wider">
+                        {org.name.slice(0, 2)}
+                      </div>
+                    )}
                   </td>
                   <td className="py-3.5 pr-4">
                     <Link
@@ -131,9 +137,6 @@ export default function Home() {
                     >
                       {org.name}
                     </Link>
-                  </td>
-                  <td className="py-3.5 pr-4 text-warm-500 max-w-xs truncate hidden md:table-cell">
-                    {org.descriptionShort ?? ""}
                   </td>
                   <td className="py-3.5 pr-4 font-mono text-warm-600 text-right tabular-nums">
                     {org.teamSize ?? "-"}

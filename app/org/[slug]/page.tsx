@@ -1,10 +1,45 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useRef, useEffect, useCallback } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
 import { formatCurrency, formatDateFull as formatDate } from "../../lib/format";
+
+function ExpandableText({ text, clamp = 5 }: { text: string; clamp?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [clamped, setClamped] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  const check = useCallback(() => {
+    const el = ref.current;
+    if (el) setClamped(el.scrollHeight > el.clientHeight + 1);
+  }, []);
+
+  useEffect(() => {
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [check, text]);
+
+  const clampClass = clamp === 5 ? "line-clamp-5" : "line-clamp-3";
+
+  return (
+    <div>
+      <div ref={ref} className={expanded ? "" : clampClass}>
+        {text}
+      </div>
+      {clamped && (
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="text-warm-400 hover:text-warm-600 text-xs mt-1 transition-colors"
+        >
+          {expanded ? "show less" : "show more"}
+        </button>
+      )}
+    </div>
+  );
+}
 
 export default function OrgPage({
   params,
@@ -62,9 +97,19 @@ export default function OrgPage({
 
         {/* Header */}
         <div className="mt-6 mb-10 flex items-start gap-6">
-          <div className="w-[72px] h-[72px] rounded-[10px] flex items-center justify-center bg-warm-100 border border-warm-200 text-warm-400 text-[0.7rem] font-medium uppercase tracking-wider shrink-0">
-            {org.name.slice(0, 2)}
-          </div>
+          {org.logoUrl ? (
+            <div className="w-[72px] h-[72px] rounded-[10px] border border-warm-200 text-warm-400 bg-warm-100 overflow-hidden flex items-center justify-center shrink-0">
+              <img
+                src={org.logoUrl}
+                alt=""
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+          ) : (
+            <div className="w-[72px] h-[72px] rounded-[10px] flex items-center justify-center bg-warm-100 border border-warm-200 text-warm-400 text-[0.7rem] font-medium uppercase tracking-wider shrink-0">
+              {org.name.slice(0, 2)}
+            </div>
+          )}
           <div>
             <h1 className="font-logo text-3xl text-warm-900">{org.name}</h1>
             {org.descriptionShort && (
@@ -74,9 +119,9 @@ export default function OrgPage({
               <p className="text-warm-400 text-sm mt-1">{org.location}</p>
             )}
             {(org.descriptionMedium || org.descriptionFull) && (
-              <p className="mt-4 text-sm leading-relaxed text-warm-600 max-w-2xl">
-                {org.descriptionFull ?? org.descriptionMedium}
-              </p>
+              <div className="mt-4 text-sm leading-relaxed text-warm-600 max-w-2xl">
+                <ExpandableText text={(org.descriptionFull ?? org.descriptionMedium)!} />
+              </div>
             )}
           </div>
         </div>
