@@ -108,6 +108,7 @@ export const insertFunds = mutation({
   args: {
     docs: v.array(
       v.object({
+        slug: v.string(),
         name: v.string(),
         descriptionShort: v.optional(v.string()),
         descriptionMedium: v.optional(v.string()),

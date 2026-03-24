@@ -42,10 +42,18 @@ export default function RootLayout({
               <Link href="/" className="font-logo text-2xl tracking-wide text-warm-900 hover:text-warm-700 transition-colors">
                 Trace
               </Link>
-              <span className="text-sm text-warm-400 font-body tracking-wide uppercase">
+              <span className="text-sm text-warm-400 font-body tracking-wide uppercase hidden sm:inline">
                 AI Safety Giving Database
               </span>
             </div>
+            <nav className="flex items-baseline gap-6">
+              <Link href="/" className="text-sm text-warm-500 hover:text-warm-800 transition-colors">
+                Organizations
+              </Link>
+              <Link href="/funds" className="text-sm text-warm-500 hover:text-warm-800 transition-colors">
+                Funds
+              </Link>
+            </nav>
           </div>
         </header>
         <ConvexClientProvider>{children}</ConvexClientProvider>

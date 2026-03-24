@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as funds from "../funds.js";
 import type * as grants from "../grants.js";
 import type * as import_ from "../import.js";
 import type * as orgs from "../orgs.js";
@@ -21,6 +22,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  funds: typeof funds;
   grants: typeof grants;
   import: typeof import_;
   orgs: typeof orgs;

@@ -4,19 +4,7 @@ import { use } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
-
-function formatCurrency(n: number | undefined): string {
-  if (n == null) return "-";
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toLocaleString()}`;
-}
-
-function formatDate(iso: string | undefined): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-}
+import { formatCurrency, formatDateFull as formatDate } from "../../lib/format";
 
 export default function OrgPage({
   params,
@@ -249,9 +237,19 @@ export default function OrgPage({
                     className="flex items-baseline justify-between gap-4 text-sm border-b border-warm-100 pb-2"
                   >
                     <div className="min-w-0">
-                      <span className="font-medium text-warm-800">
-                        {g.funderName ?? g.name ?? "Unknown funder"}
-                      </span>
+                      {g.funderOrgSlug ? (
+                        <Link href={`/org/${g.funderOrgSlug}`} className="font-medium text-warm-800 hover:text-accent transition-colors">
+                          {g.funderName}
+                        </Link>
+                      ) : g.funderFundSlug ? (
+                        <Link href={`/funds/${g.funderFundSlug}`} className="font-medium text-warm-800 hover:text-accent transition-colors">
+                          {g.funderName}
+                        </Link>
+                      ) : (
+                        <span className="font-medium text-warm-800">
+                          {g.funderName ?? g.name ?? "Unknown funder"}
+                        </span>
+                      )}
                       {g.purpose && (
                         <span className="text-warm-400 ml-2 truncate">&middot; {g.purpose}</span>
                       )}
@@ -289,9 +287,15 @@ export default function OrgPage({
                     className="flex items-baseline justify-between gap-4 text-sm border-b border-warm-100 pb-2"
                   >
                     <div className="min-w-0">
-                      <span className="font-medium text-warm-800">
-                        {g.recipientName ?? g.name ?? "Unknown recipient"}
-                      </span>
+                      {g.recipientOrgSlug ? (
+                        <Link href={`/org/${g.recipientOrgSlug}`} className="font-medium text-warm-800 hover:text-accent transition-colors">
+                          {g.recipientName}
+                        </Link>
+                      ) : (
+                        <span className="font-medium text-warm-800">
+                          {g.recipientName ?? g.name ?? "Unknown recipient"}
+                        </span>
+                      )}
                       {g.purpose && (
                         <span className="text-warm-400 ml-2 truncate">&middot; {g.purpose}</span>
                       )}

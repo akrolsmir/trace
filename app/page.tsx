@@ -4,16 +4,10 @@ import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import { formatCurrency } from "./lib/format";
 
 type SortKey = "name" | "teamSize" | "annualBudget";
 type SortDir = "asc" | "desc";
-
-function formatCurrency(n: number | undefined): string {
-  if (n == null) return "-";
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toLocaleString()}`;
-}
 
 export default function Home() {
   const orgs = useQuery(api.orgs.listOrgs);

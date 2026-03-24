@@ -197,8 +197,10 @@ async function main() {
   // ── 3. Funds ────────────────────────────────────────────
   console.log("Importing funds...");
   const { rows: pgFunds } = await pg.query("SELECT * FROM app.funds");
+  const usedFundSlugs = new Set<string>();
   const fundDocs = pgFunds.map((r: any) =>
     clean({
+      slug: uniqueSlug(r.name, usedFundSlugs),
       name: r.name,
       descriptionShort: str(r.description_short),
       descriptionMedium: str(r.description_medium),

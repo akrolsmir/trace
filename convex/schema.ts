@@ -47,6 +47,7 @@ export default defineSchema({
   }).index("by_name", ["name"]),
 
   funds: defineTable({
+    slug: v.string(),
     name: v.string(),
     descriptionShort: v.optional(v.string()),
     descriptionMedium: v.optional(v.string()),
@@ -59,7 +60,9 @@ export default defineSchema({
     applicationUrl: v.optional(v.string()),
     applicationInfo: v.optional(v.string()),
     donationLinks: v.optional(v.array(donationLink)),
-  }).index("by_name", ["name"]),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_name", ["name"]),
 
   projects: defineTable({
     name: v.string(),
