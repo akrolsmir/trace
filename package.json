@@ -6,7 +6,8 @@
     "dev": "convex dev & next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "convex run seed:seed"
+    "seed": "convex run seed:seed",
+    "import": "bun run scripts/import-pg.ts"
   },
   "dependencies": {
     "convex": "^1.34.0",

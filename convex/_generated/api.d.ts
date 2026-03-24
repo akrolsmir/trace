@@ -8,11 +8,8 @@
  * @module
  */
 
-import type * as comments from "../comments.js";
-import type * as orgs from "../orgs.js";
-import type * as seed from "../seed.js";
-import type * as seedMetr from "../seedMetr.js";
-import type * as staff from "../staff.js";
+import type * as import_ from "../import.js";
+import type * as organizations from "../organizations.js";
 
 import type {
   ApiFromModules,
@@ -21,11 +18,8 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  comments: typeof comments;
-  orgs: typeof orgs;
-  seed: typeof seed;
-  seedMetr: typeof seedMetr;
-  staff: typeof staff;
+  import: typeof import_;
+  organizations: typeof organizations;
 }>;
 
 /**
