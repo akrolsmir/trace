@@ -311,6 +311,13 @@ export default function FundPage({
                           >
                             {g.recipientName}
                           </Link>
+                        ) : g.recipientPersonSlug ? (
+                          <Link
+                            href={`/people/${g.recipientPersonSlug}`}
+                            className="font-medium text-warm-800 hover:text-accent transition-colors"
+                          >
+                            {g.recipientName}
+                          </Link>
                         ) : (
                           <span className="font-medium text-warm-800">
                             {g.recipientName ?? g.name ?? "—"}

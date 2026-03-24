@@ -32,6 +32,7 @@ export default defineSchema({
   }).index("by_slug", ["slug"]),
 
   people: defineTable({
+    slug: v.string(),
     name: v.string(),
     bio: v.optional(v.string()),
     profileImageUrl: v.optional(v.string()),
@@ -44,7 +45,9 @@ export default defineSchema({
     isGrantmaker: v.optional(v.boolean()),
     isRegrantor: v.optional(v.boolean()),
     location: v.optional(v.string()),
-  }).index("by_name", ["name"]),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_name", ["name"]),
 
   funds: defineTable({
     slug: v.string(),

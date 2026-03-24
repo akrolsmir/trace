@@ -53,6 +53,9 @@ export default function RootLayout({
               <Link href="/funds" className="text-sm text-warm-500 hover:text-warm-800 transition-colors">
                 Funds
               </Link>
+              <Link href="/people" className="text-sm text-warm-500 hover:text-warm-800 transition-colors">
+                People
+              </Link>
             </nav>
           </div>
         </header>

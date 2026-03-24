@@ -47,6 +47,7 @@ export const getGrants = query({
       grants.map(async (g) => {
         let recipientName: string | undefined;
         let recipientOrgSlug: string | undefined;
+        let recipientPersonSlug: string | undefined;
         if (g.recipientOrgId) {
           const org = await ctx.db.get(g.recipientOrgId);
           recipientName = org?.name;
@@ -57,8 +58,9 @@ export const getGrants = query({
         } else if (g.recipientPersonId) {
           const person = await ctx.db.get(g.recipientPersonId);
           recipientName = person?.name;
+          recipientPersonSlug = person?.slug;
         }
-        return { ...g, recipientName, recipientOrgSlug };
+        return { ...g, recipientName, recipientOrgSlug, recipientPersonSlug };
       })
     );
   },

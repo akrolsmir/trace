@@ -167,8 +167,10 @@ async function main() {
   // ── 2. People ───────────────────────────────────────────
   console.log("Importing people...");
   const { rows: pgPeople } = await pg.query("SELECT * FROM app.persons");
+  const usedPeopleSlugs = new Set<string>();
   const peopleDocs = pgPeople.map((r: any) =>
     clean({
+      slug: uniqueSlug(r.name, usedPeopleSlugs),
       name: r.name,
       bio: str(r.bio),
       profileImageUrl: str(r.profile_image_url),

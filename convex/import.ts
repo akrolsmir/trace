@@ -79,6 +79,7 @@ export const insertPeople = mutation({
   args: {
     docs: v.array(
       v.object({
+        slug: v.string(),
         name: v.string(),
         bio: v.optional(v.string()),
         profileImageUrl: v.optional(v.string()),
