@@ -7,7 +7,7 @@ const donationLink = v.object({
 });
 
 export default defineSchema({
-  organizations: defineTable({
+  orgs: defineTable({
     slug: v.string(),
     name: v.string(),
     descriptionShort: v.optional(v.string()),
@@ -73,7 +73,7 @@ export default defineSchema({
     expectedDuration: v.optional(v.string()),
     fundingRaisedToDate: v.optional(v.number()),
     isActivelyFundraising: v.optional(v.boolean()),
-    orgId: v.optional(v.id("organizations")),
+    orgId: v.optional(v.id("orgs")),
     donationLinks: v.optional(v.array(donationLink)),
   }).index("by_org", ["orgId"]),
 
@@ -81,9 +81,9 @@ export default defineSchema({
     name: v.optional(v.string()),
     funderFundId: v.optional(v.id("funds")),
     funderPersonId: v.optional(v.id("people")),
-    funderOrgId: v.optional(v.id("organizations")),
+    funderOrgId: v.optional(v.id("orgs")),
     recipientPersonId: v.optional(v.id("people")),
-    recipientOrgId: v.optional(v.id("organizations")),
+    recipientOrgId: v.optional(v.id("orgs")),
     recipientProjectId: v.optional(v.id("projects")),
     amount: v.optional(v.number()),
     dateAwarded: v.optional(v.string()),
@@ -98,7 +98,7 @@ export default defineSchema({
 
   personOrgs: defineTable({
     personId: v.id("people"),
-    orgId: v.id("organizations"),
+    orgId: v.id("orgs"),
     role: v.optional(v.string()),
     startDate: v.optional(v.string()),
     endDate: v.optional(v.string()),

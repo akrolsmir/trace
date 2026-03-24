@@ -17,14 +17,18 @@ export const clearAll = mutation({
       "projects",
       "funds",
       "people",
-      "organizations",
-    ] as const;
+      "orgs",
+      // Legacy tables from old schema
+      "orgs",
+      "staff",
+      "comments",
+    ];
 
     const counts: Record<string, number> = {};
     for (const table of tables) {
-      const docs = await ctx.db.query(table).collect();
+      const docs = await ctx.db.query(table as any).collect();
       for (const doc of docs) {
-        await ctx.db.delete(doc._id);
+        await ctx.db.delete(doc._id as any);
       }
       counts[table] = docs.length;
     }
@@ -33,7 +37,7 @@ export const clearAll = mutation({
   },
 });
 
-export const insertOrganizations = mutation({
+export const insertOrgs = mutation({
   args: {
     docs: v.array(
       v.object({
@@ -64,7 +68,7 @@ export const insertOrganizations = mutation({
   handler: async (ctx, args) => {
     const ids = [];
     for (const doc of args.docs) {
-      const id = await ctx.db.insert("organizations", doc);
+      const id = await ctx.db.insert("orgs", doc);
       ids.push(id);
     }
     return ids;
@@ -144,7 +148,7 @@ export const insertProjects = mutation({
         expectedDuration: v.optional(v.string()),
         fundingRaisedToDate: v.optional(v.number()),
         isActivelyFundraising: v.optional(v.boolean()),
-        orgId: v.optional(v.id("organizations")),
+        orgId: v.optional(v.id("orgs")),
         donationLinks: v.optional(v.array(donationLink)),
       })
     ),
@@ -166,9 +170,9 @@ export const insertGrants = mutation({
         name: v.optional(v.string()),
         funderFundId: v.optional(v.id("funds")),
         funderPersonId: v.optional(v.id("people")),
-        funderOrgId: v.optional(v.id("organizations")),
+        funderOrgId: v.optional(v.id("orgs")),
         recipientPersonId: v.optional(v.id("people")),
-        recipientOrgId: v.optional(v.id("organizations")),
+        recipientOrgId: v.optional(v.id("orgs")),
         recipientProjectId: v.optional(v.id("projects")),
         amount: v.optional(v.number()),
         dateAwarded: v.optional(v.string()),
@@ -189,7 +193,7 @@ export const insertPersonOrgs = mutation({
     docs: v.array(
       v.object({
         personId: v.id("people"),
-        orgId: v.id("organizations"),
+        orgId: v.id("orgs"),
         role: v.optional(v.string()),
         startDate: v.optional(v.string()),
         endDate: v.optional(v.string()),

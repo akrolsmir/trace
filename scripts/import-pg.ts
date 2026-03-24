@@ -151,14 +151,14 @@ async function main() {
     })
   );
 
-  const orgMap = new Map<string, Id<"organizations">>();
+  const orgMap = new Map<string, Id<"orgs">>();
   for (const batch of chunk(orgDocs, BATCH_SIZE)) {
-    const ids = await convex.mutation(api.import.insertOrganizations, {
+    const ids = await convex.mutation(api.import.insertOrgs, {
       docs: batch,
     });
     // Match returned IDs to PG UUIDs by batch position
     const batchStart = orgDocs.indexOf(batch[0]);
-    ids.forEach((id: Id<"organizations">, i: number) => {
+    ids.forEach((id: Id<"orgs">, i: number) => {
       orgMap.set(pgOrgs[batchStart + i].id, id);
     });
   }
