@@ -5,8 +5,15 @@ import { api } from "../convex/_generated/api";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 
-type SortKey = "name" | "headcount" | "budget2026";
+type SortKey = "name" | "teamSize" | "annualBudget";
 type SortDir = "asc" | "desc";
+
+function formatCurrency(n: number | undefined): string {
+  if (n == null) return "-";
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toLocaleString()}`;
+}
 
 export default function Home() {
   const orgs = useQuery(api.orgs.listOrgs);
@@ -35,8 +42,8 @@ export default function Home() {
       ? orgs.filter(
           (o) =>
             o.name.toLowerCase().includes(q) ||
-            o.subtitle.toLowerCase().includes(q) ||
-            o.tags.some((t) => t.toLowerCase().includes(q))
+            (o.descriptionShort?.toLowerCase().includes(q) ?? false) ||
+            (o.location?.toLowerCase().includes(q) ?? false)
         )
       : [...orgs];
 
@@ -44,11 +51,10 @@ export default function Home() {
       let cmp = 0;
       if (sortKey === "name") {
         cmp = a.name.localeCompare(b.name);
-      } else if (sortKey === "headcount") {
-        cmp = a.headcount - b.headcount;
-      } else if (sortKey === "budget2026") {
-        const parse = (s: string) => parseFloat(s.replace(/[^0-9.]/g, ""));
-        cmp = parse(a.budget2026) - parse(b.budget2026);
+      } else if (sortKey === "teamSize") {
+        cmp = (a.teamSize ?? 0) - (b.teamSize ?? 0);
+      } else if (sortKey === "annualBudget") {
+        cmp = (a.annualBudget ?? 0) - (b.annualBudget ?? 0);
       }
       return sortDir === "asc" ? cmp : -cmp;
     });
@@ -92,23 +98,23 @@ export default function Home() {
                 >
                   Organization{sortIndicator("name")}
                 </th>
-                <th className="py-3 pr-4 font-medium text-warm-500 uppercase text-xs tracking-wider">
-                  Focus
+                <th className="py-3 pr-4 font-medium text-warm-500 uppercase text-xs tracking-wider hidden md:table-cell">
+                  Description
                 </th>
                 <th
                   className="py-3 pr-4 font-medium font-mono text-warm-500 uppercase text-xs tracking-wider cursor-pointer select-none text-right hover:text-warm-700 transition-colors"
-                  onClick={() => handleSort("headcount")}
+                  onClick={() => handleSort("teamSize")}
                 >
-                  People{sortIndicator("headcount")}
+                  Team{sortIndicator("teamSize")}
                 </th>
                 <th
                   className="py-3 pr-4 font-medium font-mono text-warm-500 uppercase text-xs tracking-wider cursor-pointer select-none text-right hover:text-warm-700 transition-colors"
-                  onClick={() => handleSort("budget2026")}
+                  onClick={() => handleSort("annualBudget")}
                 >
-                  2026 Budget{sortIndicator("budget2026")}
+                  Budget{sortIndicator("annualBudget")}
                 </th>
-                <th className="py-3 font-medium text-warm-500 uppercase text-xs tracking-wider">
-                  Tags
+                <th className="py-3 font-medium text-warm-500 uppercase text-xs tracking-wider hidden lg:table-cell">
+                  Location
                 </th>
               </tr>
             </thead>
@@ -132,24 +138,17 @@ export default function Home() {
                       {org.name}
                     </Link>
                   </td>
-                  <td className="py-3.5 pr-4 text-warm-500">{org.subtitle}</td>
-                  <td className="py-3.5 pr-4 font-mono text-warm-600 text-right tabular-nums">
-                    {org.headcount}
+                  <td className="py-3.5 pr-4 text-warm-500 max-w-xs truncate hidden md:table-cell">
+                    {org.descriptionShort ?? ""}
                   </td>
                   <td className="py-3.5 pr-4 font-mono text-warm-600 text-right tabular-nums">
-                    {org.budget2026}
+                    {org.teamSize ?? "-"}
                   </td>
-                  <td className="py-3.5">
-                    <div className="flex gap-1.5 flex-wrap">
-                      {org.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-0.5 text-xs bg-warm-100 text-warm-500 rounded-sm"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                  <td className="py-3.5 pr-4 font-mono text-warm-600 text-right tabular-nums">
+                    {formatCurrency(org.annualBudget)}
+                  </td>
+                  <td className="py-3.5 text-warm-500 text-sm hidden lg:table-cell">
+                    {org.location ?? ""}
                   </td>
                 </tr>
               ))}

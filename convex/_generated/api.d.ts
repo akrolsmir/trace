@@ -8,8 +8,11 @@
  * @module
  */
 
+import type * as grants from "../grants.js";
 import type * as import_ from "../import.js";
 import type * as orgs from "../orgs.js";
+import type * as people from "../people.js";
+import type * as projects from "../projects.js";
 
 import type {
   ApiFromModules,
@@ -18,8 +21,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  grants: typeof grants;
   import: typeof import_;
   orgs: typeof orgs;
+  people: typeof people;
+  projects: typeof projects;
 }>;
 
 /**
